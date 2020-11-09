@@ -1,15 +1,16 @@
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import recall_score
 import matplotlib.pyplot as plt
+import numpy as np
  
  
 # 预测数据，predict之后的预测结果集
-'''guess = [1, 0, 1, 2, 1, 0, 1, 0, 1, 0]
+guess = np.loadtxt(r"C:\Users\www\Desktop\pre.txt")
 # 真实结果集
-fact = [0, 1, 0, 1, 2, 1, 0, 1, 0, 1]'''
+fact = np.loadtxt(r"C:\Users\www\Desktop\true.txt")
 
-guess = [1, 2, 1, 0, 1, 2, 1, 3, 1, 0,3]
-fact =  [1, 2, 1, 0, 1, 3, 1, 3, 0, 0,3]
+'''guess = [1, 2, 1, 0, 1, 2, 1, 3, 1, 0,3]
+fact =  [1, 2, 1, 0, 1, 3, 1, 3, 0, 0,3]'''
 
 # 类别
 classes = list(set(fact))
