@@ -1,0 +1,195 @@
+#关于字典（dictionary）
+'''可变容器模型，由键和对应值组成
+注意：
+每个键与值用冒号隔开（:），每对用逗号，每对用逗号分割，整体放在花括号中（{}）。
+键必须独一无二，但值则不必。
+值可以取任何数据类型，但必须是不可变的，如字符串，数或元组'''
+'''dict1={'Alice':'1234','Beth':'4567','Cily':'7894'}
+dict2={'姓名':'小明','年龄':12,'班级':'三年级一班'}
+print(dict2['姓名'])
+dict2['姓名']='小红'
+print(dict2['姓名'])
+#字典练习代码
+print(|---欢迎进入通讯录程序---|
+|---1、 查询联系人资料---|
+|---2、 插入新的联系人---|
+|---3、 删除已有联系人---|
+|---4、 退出通讯录程序---|)
+#此处的三个引号是希望每一行输出一个指令序号
+addressBook={}#定义通讯录
+while 1:
+    temp=input('请输入指令代码：')
+    if not temp.isdigit():
+        print("输入的指令错误，请按照提示输入")
+        continue
+    item=int(temp)#转换为数字
+    if item==4:
+        print("|---感谢使用通讯录程序---|")
+        break
+    name = input("请输入联系人姓名:")
+    if item==1:
+        if name in addressBook:
+            print(name,':',addressBook[name])
+            continue
+        else:
+            print("该联系人不存在！")
+    if item==2:
+        if name in addressBook:
+            print("您输入的姓名在通讯录中已存在-->>",name,":",addressBook[name])
+            isEdit=input("是否修改联系人资料(Y/N）:")
+            if isEdit=='Y':
+                userphone = input("请输入联系人电话：")
+                addressBook[name]=userphone
+                print("联系人修改成功")
+                continue
+            else:
+                continue
+        else:
+            userphone=input("请输入联系人电话：")
+            addressBook[name]=userphone
+            print("联系人加入成功！")
+            continue
+
+    if item==3:
+        if name in addressBook:
+            del addressBook[name]
+            print("删除成功！")
+            continue
+        else:
+            print("联系人不存在")'''
+
+
+import pandas as pd 
+rowdata={'电影名称':['无问西东','后来的我们','前任3','红海行动','唐人街探案','战狼2'], 
+		 '打斗镜头':[1,5,12,108,112,115], 
+		 '接吻镜头':[101,89,97,5,9,8], 
+		 '电影类型':['爱情片','爱情片','爱情片','动作片','动作片','动作片']} 
+movie_data= pd.DataFrame(rowdata)
+print(movie_data)
+new_data = [24,67] 
+'''dist = list((((movie_data.iloc[:6,1:3]-new_data)**2).sum(1))**0.5) #1:3读取的是从第二个元素开始，读取两个
+print(dist)
+k=4
+dist_l = pd.DataFrame({'dist': dist, 'labels': (movie_data.iloc[:6, 3])})
+print(dist_l)
+dr = dist_l.sort_values(by = 'dist')[: k]
+print(dr)
+re = dr.loc[:,'labels'].value_counts()
+print(re)
+result = []
+result.append(re.index[0])
+result
+print(result)'''
+'''
+import pandas as pd
+"""
+函数功能：KNN分类器
+参数说明：
+    inX:需要预测分类的数据集
+    dataSet:已知分类标签的数据集（训练集）
+    k:k-近邻算法参数，选择距离最小的k个点
+返回：
+    result：分类结果
+"""
+ 
+def classify0(inX,dataSet,k):
+    result=[]
+    dist = list((((movie_data.iloc[:6,1:3]-new_data)**2).sum(1))**0.5)
+    dist_l = pd.DataFrame({'dist': dist, 'labels': (movie_data.iloc[:6, 3])})
+    dr = dist_l.sort_values(by = 'dist')[: k]
+    re = dr.loc[:,'labels'].value_counts()
+    result.append(re.index[0])
+    return result
+
+inX = new_data
+dataSet = movie_data
+k= 4
+r=classify0(inX,dataSet,k)
+print(r)
+'''
+
+#1.准备数据
+import pandas as pd
+datingTest=pd.read_table(r"C:\Users\www\Desktop\数据集\datingTestSet.txt",header=None)
+'''
+查看头几行
+print(datingTest.head())
+查看规模
+print(datingTest.shape)
+查看各列数据类型
+datingTest.info()
+'''
+#2.分析数据
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+ 
+Colors=[]
+for i in range(datingTest.shape[0]):
+    m=datingTest.iloc[i,-1]
+    if m=='didntLike':
+        Colors.append('black')
+    elif m=='smallDoses':
+        Colors.append('orange')
+    else:
+        Colors.append('red')
+#绘制两两特征之间的散点图
+plt.rcParams['font.sans-serif']=['Simhei'] #设置字体为黑体
+pl=plt.figure(figsize=(12,8))
+#用到了画布与子画布的概念
+fig1=pl.add_subplot(221)
+plt.scatter(datingTest.iloc[:,1], datingTest.iloc[:,2], marker='.',c=Colors)
+plt.xlabel('玩游戏视频所占时间比')
+plt.ylabel('每周消费冰淇凌公升数')
+ 
+fig2=pl.add_subplot(222)
+plt.scatter(datingTest.iloc[:,0], datingTest.iloc[:,1], marker='.',c=Colors)
+plt.xlabel('每年飞行常客里程')
+plt.ylabel('玩游戏视频所占时间比')
+ 
+ 
+fig1=pl.add_subplot(223)
+plt.scatter(datingTest.iloc[:,0], datingTest.iloc[:,2], marker='.',c=Colors)
+plt.xlabel('每年飞行常客里程')
+plt.ylabel('每周消费冰淇凌公升数')
+ 
+plt.show()
+ 
+#3.数据归一化:使各个特征对距离影响的权重相同
+#在这里采用0-1标准化
+def minmax(dataSet):
+    minDf=dataSet.min()
+    maxDf=dataSet.max()
+    normSet=(dataSet-minDf)/(maxDf-minDf)
+    return normSet
+ 
+datingT=pd.concat([minmax(datingTest.iloc[:,:3]),datingTest.iloc[:,3]],axis=1)
+ 
+#4.划分训练集和测试集
+def randSplit(dataSet,rate=0.9):
+    n=dataSet.shape[0] 
+    m=int(n*rate)
+    train=dataSet.iloc[:m,:]
+    test=dataSet.iloc[m:,:]
+    test.index=range(test.shape[0]) #重置index行号
+    return train,test
+ 
+train,test=randSplit(datingT)
+#5.构建分类器
+def datingClass(train,test,k):
+    n=train.shape[1]-1
+    m=test.shape[0]
+    result=[]
+    for i in range(m):
+        dist=list((((train.iloc[:,:n]-test.iloc[i,:n])**2).sum(1))**0.5)
+        dist_l=pd.DataFrame({'dist':dist,'labels':(train.iloc[:,n])})
+        dr=dist_l.sort_values(by='dist')[:k]
+        re=dr.loc[:,'labels'].value_counts()
+        result.append(re.index[0])
+    result=pd.Series(result)
+    test['predict']=result
+    acc=(test.iloc[:,-1]==test.iloc[:,-2]).mean()
+    print(f'模型预测准确率为{acc}')
+    return test
+ 
+#验证模型
+datingClass(train,test,5)
